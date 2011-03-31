@@ -1,11 +1,10 @@
 package com.banksimple.clipping
 
 
-class PersistenceError(underlying: Exception) extends Exception
-
+class PersistenceError(underlying: Throwable) extends Exception
 trait PersistingStrategy[A] {
   def persist(v: A): Unit
-  def read(): A
+  def read(): Option[A]
 }
 
 trait StateManagementStrategy[A] {

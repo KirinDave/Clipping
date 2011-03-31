@@ -38,8 +38,8 @@ trait SyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
       if(storedValue.isEmpty) { // Uninitialized case
         storedValue = Some(
           read() match {
-            case v if(v != null) => v // Read failed.
-            case _               => default
+            case Some(v) => v.asInstanceOf[A]
+            case _       => default
           })
       }
       storedValue.get // What we actually want
