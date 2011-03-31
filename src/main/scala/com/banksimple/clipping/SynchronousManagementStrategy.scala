@@ -33,7 +33,29 @@ trait SyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
   }
   
   override def get(): A = {
-    // TODO
+    rwLock.readLock().lock() // Make sure there's no 
+    try {
+      if(storedValue.isEmpty) { // Uninitialized case
+        storedValue = Some(
+          read() match {
+            case v if(v != null) => v // Read failed.
+            case _               => default
+          })
+      }
+      storedValue.get // What we actually want
+    }
+    catch {
+      case x: PersistenceError => {
+        // This only occurs during the initial read, so populate with default
+        if(storedValue.isEmpty) { storedValue = Some(default) } 
+        storedValue.get
+        // TODO: Log
+      }
+      case _ => storedValue.get
+    }
+    finally { 
+      rwLock.readLock().unlock()
+    }
   }
 
 }

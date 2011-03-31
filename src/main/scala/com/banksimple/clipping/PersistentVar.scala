@@ -1,9 +1,11 @@
 package com.banksimple.clipping
 
 
+class PersistenceError(underlying: Exception) extends Exception
+
 trait PersistingStrategy[A] {
   def persist(v: A): Unit
-  def read(v: A): Unit
+  def read(): A
 }
 
 trait StateManagementStrategy[A] {
@@ -13,7 +15,7 @@ trait StateManagementStrategy[A] {
 }
 
 
-trait PersistentVar[A] {
+abstract class PersistentVar[A] {
   self: PersistentVar[A] with StateManagementStrategy[A] with PersistingStrategy[A] =>
 
   protected var storedValue: Option[A] = None
@@ -24,6 +26,5 @@ trait PersistentVar[A] {
   def writeIf(test: A => Boolean)(v: => A): A = putIf(test, () => { v }) 
   def read(): A = get()
   def apply(): A = get()
-
 }
 
