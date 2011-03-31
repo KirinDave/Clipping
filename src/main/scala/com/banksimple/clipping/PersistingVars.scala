@@ -13,3 +13,13 @@ extends PersistentVar[A] with OnDiskPersistingStrategy[A]
   override val storageLoc = storeLocation
   override def defaultValue = default
 }
+
+class ConcurrentDiskVar[A <: Serializable](default: A,
+                                           uName: String,
+                                           storeLocation: String = "/tmp/")
+extends PersistentVar[A] with OnDiskPersistingStrategy[A] 
+                         with AsyncronousManagementStrategy[A] {
+  override val name = uName
+  override val storageLoc = storeLocation
+  override def defaultValue = default
+}
