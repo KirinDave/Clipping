@@ -24,5 +24,7 @@ abstract class PersistentVar[A] {
   def writeIf(test: A => Boolean)(v: => A): A = putIf(test, () => { v }) 
   def read(): A = get()
   def apply(): A = get()
+
+  def <<(v: A) = write(v)
 }
 
