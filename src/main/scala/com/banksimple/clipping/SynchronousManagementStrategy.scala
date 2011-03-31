@@ -39,7 +39,7 @@ trait SyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
         storedValue = Some(
           read() match {
             case Some(v) => v.asInstanceOf[A]
-            case _       => default
+            case _       => defaultValue
           })
       }
       storedValue.get // What we actually want
@@ -47,7 +47,7 @@ trait SyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
     catch {
       case x: PersistenceError => {
         // This only occurs during the initial read, so populate with default
-        if(storedValue.isEmpty) { storedValue = Some(default) } 
+        if(storedValue.isEmpty) { storedValue = Some(defaultValue) } 
         storedValue.get
         // TODO: Log
       }
