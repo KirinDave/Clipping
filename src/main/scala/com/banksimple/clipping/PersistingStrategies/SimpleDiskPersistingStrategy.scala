@@ -1,5 +1,6 @@
-package com.banksimple.clipping
+package com.banksimple.clipping.PersistingStrategies
 
+import com.banksimple.clipping.{PersistingStrategy, PersistenceError}
 import java.io.{Serializable, File,
                 ObjectOutputStream,ObjectInputStream,
                 FileOutputStream, FileInputStream}
@@ -15,7 +16,7 @@ trait OnDiskPersistingStrategy[A] extends PersistingStrategy[A] {
       out.close
     }
     catch {
-      case x => throw new PersistenceError(x)
+      case x => throw new PersistenceError(x) // TODO: Log
     }
   }
 

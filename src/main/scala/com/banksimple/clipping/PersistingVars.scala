@@ -1,6 +1,9 @@
 package com.banksimple.clipping
 import java.io.Serializable
 
+import com.banksimple.clipping.ManagementStrategies._
+import com.banksimple.clipping.PersistingStrategies._
+
 class SynchronizedDiskVar[A <: Serializable](default: A,
                                              uName: String,
                                              storeLocation: String = "/tmp/")

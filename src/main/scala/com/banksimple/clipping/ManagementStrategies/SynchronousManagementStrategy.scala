@@ -1,4 +1,6 @@
-package com.banksimple.clipping
+package com.banksimple.clipping.ManagementStrategies
+
+import com.banksimple.clipping.{PersistentVar,PersistingStrategy,StateManagementStrategy, PersistenceError}
 import java.util.concurrent._
 import java.util.concurrent.locks.{ReentrantReadWriteLock,ReentrantLock}
 
