@@ -37,7 +37,7 @@ trait SyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
     try {
       if(storedValue.isEmpty) { // Uninitialized case
         storedValue = Some(
-          read() match {
+          reify() match {
             case Some(v) => v.asInstanceOf[A]
             case _       => defaultValue
           })
@@ -51,7 +51,10 @@ trait SyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
         storedValue.get
         // TODO: Log
       }
-      case _ => storedValue.get
+      case _ => { 
+        if(storedValue.isEmpty) { storedValue = Some(defaultValue) } 
+        storedValue.get
+      }
     }
     finally { 
       rwLock.readLock().unlock()

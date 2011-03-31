@@ -4,7 +4,7 @@ import java.io.{Serializable, File,
                 ObjectOutputStream,ObjectInputStream,
                 FileOutputStream, FileInputStream}
 
-trait OnDiskPersistingStrategy[A <: Serializable] extends PersistingStrategy[A] {
+trait OnDiskPersistingStrategy[A] extends PersistingStrategy[A] {
   val storageLoc = "/tmp/"
   val name: String
 
@@ -19,7 +19,7 @@ trait OnDiskPersistingStrategy[A <: Serializable] extends PersistingStrategy[A] 
     }
   }
 
-  override def read(): Option[A] = {
+  override def reify(): Option[A] = {
     val source = new File(storageLoc + name)
     if(source.exists) {
       val in = new ObjectInputStream(new FileInputStream(source))
