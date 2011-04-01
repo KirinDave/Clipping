@@ -2,6 +2,8 @@ package com.banksimple.clipping.ManagementTests
 
 import com.banksimple.clipping._
 import com.banksimple.clipping.ManagementStrategies._
+import java.util.concurrent.{Executor,Executors,TimeUnit}
+import java.util.Random
 
 
 import org.specs.Specification
@@ -55,9 +57,7 @@ class ManagementSpec extends Specification {
     }
 
    "not result in collision in medium-threading use cases." in {
-     import java.util.concurrent.{Executor,Executors,TimeUnit}
-     import java.util.Random
-
+   
      val sT = new SynchronizedTestVar
      val aT = new AsyncTestVar
      val testPool = Executors.newFixedThreadPool(10)
@@ -82,6 +82,32 @@ class ManagementSpec extends Specification {
      sT.hasFailed must beFalse
      aT.hasFailed must beFalse
    }
+  }
+
+  "withstand the pain of write-heavy worlds." in { 
+    val sT = new SynchronizedTestVar
+    val aT = new AsyncTestVar
+    val testPool = Executors.newFixedThreadPool(50)
+    val rGen = new Random(System.currentTimeMillis())
+    val workers:Seq[() => Unit] = Seq.fill(1000) {
+      () => {
+        for( time <- (1 to 1000) ) {
+          val (x,y) = (sT(),aT())
+            if(time % 2 == 0) {
+              val rS = rGen.nextInt.toString
+              sT << rS
+              aT << rS
+            }
+        }
+      }
+    }
+    
+    workers foreach( testPool.execute(_) )
+    testPool.shutdown
+    testPool.awaitTermination(30, TimeUnit.SECONDS)
+    testPool.isTerminated must beTrue // Otherwise, we deadlocked
+    sT.hasFailed must beFalse
+    aT.hasFailed must beFalse
   }
 
   private implicit def makeRunnable(in: () => Unit): Runnable = {
