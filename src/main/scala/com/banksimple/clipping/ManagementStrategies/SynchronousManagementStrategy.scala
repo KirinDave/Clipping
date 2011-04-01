@@ -16,8 +16,8 @@ trait SyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
       if(test(currentVal)) {
         produce() match {
           case v if(v != null) => { 
-            persist(v)
             storedValue = Some(v)
+            persist(v)
             v
           }
           case _ => currentVal
@@ -25,9 +25,12 @@ trait SyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
       } else currentVal
     }
     catch {
-      case e => {
+      case PersistenceError(cause) => {
+        log.error("Could not persist value because: %s. Continuing without persisting.".format(cause))
         get()
       }
+      case x => throw x // We probably want to fail out aggressively here,
+                        // it's almost certainly a code error.
     }
     finally {
       rwLock.writeLock().unlock()
@@ -47,15 +50,16 @@ trait SyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
       storedValue.get // What we actually want
     }
     catch {
-      case x: PersistenceError => {
+      case PersistenceError(cause) => {
         // This only occurs during the initial read, so populate with default
+        log.warning("Problem attempting to reify var. Using default. Error: %s".format(cause))
         if(storedValue.isEmpty) { storedValue = Some(defaultValue) } 
         storedValue.get
-        // TODO: Log
       }
-      case _ => { 
-        if(storedValue.isEmpty) { storedValue = Some(defaultValue) } 
-        storedValue.get
+      case e => { 
+        // Almost certainly a code error we should pass to the user
+        log.error("Problem attempting to get() var. Error: %s".format(e))
+        throw e
       }
     }
     finally { 

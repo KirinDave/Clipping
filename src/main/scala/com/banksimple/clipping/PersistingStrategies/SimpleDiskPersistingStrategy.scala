@@ -1,11 +1,12 @@
 package com.banksimple.clipping.PersistingStrategies
 
-import com.banksimple.clipping.{PersistingStrategy, PersistenceError}
+import com.banksimple.clipping.{PersistingStrategy, PersistenceError, PersistentVar}
 import java.io.{Serializable, File,
                 ObjectOutputStream,ObjectInputStream,
                 FileOutputStream, FileInputStream}
 
 trait OnDiskPersistingStrategy[A] extends PersistingStrategy[A] {
+  self: PersistentVar[A] =>
   val storageLoc = "/tmp/"
   val name: String
 
@@ -16,7 +17,9 @@ trait OnDiskPersistingStrategy[A] extends PersistingStrategy[A] {
       out.close
     }
     catch {
-      case x => throw new PersistenceError(x) // TODO: Log
+      case x => {
+        throw new PersistenceError(x)
+      }
     }
   }
 
@@ -27,7 +30,13 @@ trait OnDiskPersistingStrategy[A] extends PersistingStrategy[A] {
       try { 
         Some(in.readObject.asInstanceOf[A])
       }
-      catch { case _ => None  } // TODO: Log
+      catch { 
+        case e => {
+          log.error("An error occured while attempting to reify %s: %s".format(
+            storageLoc + name,
+            e)) 
+          None } 
+      }
     } else None
   }
 

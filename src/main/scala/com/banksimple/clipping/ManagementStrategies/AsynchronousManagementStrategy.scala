@@ -53,15 +53,16 @@ trait AsyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
       storedValue.get // What we actually want
     }
     catch {
-      case x: PersistenceError => {
+      case PersistenceError(cause) => {
         // This only occurs during the initial read, so populate with default
+        log.warning("Problem attempting to reify var. Using default. Error: %s".format(cause))
         if(storedValue.isEmpty) { storedValue = Some(defaultValue) } 
         storedValue.get
-        // TODO: Log
       }
-      case _ => { 
-        if(storedValue.isEmpty) { storedValue = Some(defaultValue) } 
-        storedValue.get
+      case e => { 
+        // Almost certainly a code error we should pass to the user
+        log.error("Problem attempting to get() var. Error: %s".format(e))
+        throw e
       }
     }
     finally { 
@@ -75,7 +76,12 @@ trait AsyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
         persistenceLock.lock()
         try { persist(v) }
         catch {
-          case _ => None // TODO: Log
+          case PersistenceError(cause) => {
+            log.error("Error persisting value: %s".format(cause))
+          }
+          case e => {
+            log.error("Unknown error while attempting to asynchronously persist value: %s".format(e))
+          }
         }
         finally { persistenceLock.unlock() }
       }

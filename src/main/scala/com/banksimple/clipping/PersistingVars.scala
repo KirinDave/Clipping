@@ -14,6 +14,7 @@ extends PersistentVar[A] with OnDiskPersistingStrategy[A]
   override def defaultValue = default
 }
 
+
 class ConcurrentDiskVar[A <: Serializable](default: A,
                                            uName: String,
                                            storeLocation: String = "/tmp/")

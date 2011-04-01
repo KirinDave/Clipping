@@ -1,7 +1,8 @@
 package com.banksimple.clipping
+import com.banksimple.util.Logging
 
 
-class PersistenceError(underlying: Throwable) extends Exception
+case class PersistenceError(underlying: Throwable) extends Exception
 trait PersistingStrategy[A] {
   def persist(v: A): Unit
   def reify(): Option[A]
@@ -14,7 +15,7 @@ trait StateManagementStrategy[A] {
 }
 
 
-abstract class PersistentVar[A] {
+abstract class PersistentVar[A] extends Logging {
   self: PersistentVar[A] with StateManagementStrategy[A] with PersistingStrategy[A] =>
 
   protected var storedValue: Option[A] = None
