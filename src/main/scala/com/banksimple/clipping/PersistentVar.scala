@@ -25,7 +25,9 @@ abstract class PersistentVar[A] extends Logging {
   def writeIf(test: A => Boolean)(v: => A): A = putIf(test, () => { v }) 
   def read(): A = get()
   def apply(): A = get()
-
   def <<(v: A) = write(v)
+
+  def map[B](f: A => B) = f(get())
+  def foreach(f: A => Unit) = f(get())
 }
 
