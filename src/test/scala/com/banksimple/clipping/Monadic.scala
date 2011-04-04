@@ -37,7 +37,7 @@ class MonadicSpec extends Specification {
       tT << tval
 
       val r = for( t <- tT ) yield { t.toString }
-      r.head must be_==(tval)
+      r must be_==(tval.toString)
     }
   }
 }
