@@ -27,7 +27,7 @@ object ToDisk extends Specification with TempFolder {
 
 
         val var2 = new STV(default, "L1", folderName) // This creates a new cell to read.
-                                                        // Don't do this normally, it's unsafe.
+                                                      // Don't do this normally, it's unsafe.
         var2() must be_==(var1())
       } 
     }
