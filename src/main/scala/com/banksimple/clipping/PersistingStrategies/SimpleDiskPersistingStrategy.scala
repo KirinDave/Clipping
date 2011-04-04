@@ -27,15 +27,15 @@ trait OnDiskPersistingStrategy[A] extends PersistingStrategy[A] {
     val source = new File(storageLoc + name)
     if(source.exists) {
       val in = new ObjectInputStream(new FileInputStream(source))
-      try { 
+      try {
         Some(in.readObject.asInstanceOf[A])
       }
-      catch { 
+      catch {
         case e => {
           log.error("An error occured while attempting to reify %s: %s".format(
             storageLoc + name,
-            e)) 
-          None } 
+            e), e)
+          None }
       }
     } else None
   }
