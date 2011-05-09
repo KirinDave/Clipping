@@ -11,8 +11,8 @@ trait OnDiskPersistingStrategy[A] extends PersistingStrategy[A] {
   val name: String
 
   override def persist(value: A): Unit = {
-    val tmpFile = new File(storageLoc + makeTempName)
-    val resultFile = new File(storageLoc + name)
+    val tmpFile = new File(storageLoc, makeTempName)
+    val resultFile = new File(storageLoc, name)
     try {
       val out = new ObjectOutputStream(new FileOutputStream(tmpFile))
       out.writeObject(value)
@@ -27,7 +27,7 @@ trait OnDiskPersistingStrategy[A] extends PersistingStrategy[A] {
   }
 
   override def reify(): Option[A] = {
-    val source = new File(storageLoc + name)
+    val source = new File(storageLoc, name)
     if(source.exists) {
       val in = new ObjectInputStream(new FileInputStream(source))
       try {
