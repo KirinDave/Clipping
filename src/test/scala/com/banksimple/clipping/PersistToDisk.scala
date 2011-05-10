@@ -1,7 +1,6 @@
 package com.banksimple.clipping
 
 import java.io._
-//import com.banksimple.util.TempFolder
 import org.specs.Specification
 
 object ToDisk extends Specification {
