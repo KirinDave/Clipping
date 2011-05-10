@@ -4,7 +4,7 @@ class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
 
   val bankSimpleRepo = "BankSimple Repo" at "http://nexus.banksimple.com/content/groups/public"
 
-  val pluginSimple = "com.banksimple" % "pluginsimple" % "0.2.3-SNAPSHOT"
+  // val pluginSimple = "com.banksimple" % "pluginsimple" % "0.2.3-SNAPSHOT"
 
   val sbtIdeaRepo = "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
   val sbtIdeaPlugin = "com.github.mpeltonen" % "sbt-idea-plugin" % "0.2.0"
