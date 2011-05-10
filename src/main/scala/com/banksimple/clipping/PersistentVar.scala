@@ -1,5 +1,5 @@
 package com.banksimple.clipping
-import com.banksimple.util.Logging
+import com.codahale.logula.Logging
 
 
 case class PersistenceError(underlying: Throwable) extends Exception

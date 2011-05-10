@@ -55,7 +55,7 @@ trait AsyncronousManagementStrategy[A] extends StateManagementStrategy[A] {
     catch {
       case PersistenceError(cause) => {
         // This only occurs during the initial read, so populate with default
-        log.warning("Problem attempting to reify var. Using default. Error: %s".format(cause))
+        log.error("Problem attempting to reify var. Using default. Error: %s".format(cause))
         if(storedValue.isEmpty) { storedValue = Some(defaultValue) }
         storedValue.get
       }
