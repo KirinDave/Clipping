@@ -8,7 +8,7 @@ should make a best effort to be persistent between runs of your
 software.
 
 Clipping does not enforce any explicit semantics on the strategy for
-storage, and currently its only implementations use the standard java
+storage, and currently its only implementations use the standard Java
 serialization strategies. Its architecture is such that it is trivial 
 to switch between various storage mediums, and to provide any sort of
 (simple) persistence semantics you might deem fit. 
@@ -70,12 +70,12 @@ execute the writes and reads (a ManagementStrategy). Currently the
 following complete implementations exist:
 
 1. *SynchronizedDiskVar*: This implementation writes values to disk
-   using standard java serialization. When writes occur, they occur
+   using standard Java serialization. When writes occur, they occur
    within the calling thread. This strategy is reentrant and has a
    slightly lower overhead than its peer, but if many threads are
    writing to the variable it will cause unnecessary lock contention.
 2. *ConcurrentDiskVar*: Like its cousin, it writes values to disk using
-   java serialization. Unlike SynchronizedDiskVar, it uses a
+   Java serialization. Unlike SynchronizedDiskVar, it uses a
    ReadWriteLock and tasks a separate thread with writes. This is
    probably the preferred implementation for most cases.
 
