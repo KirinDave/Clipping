@@ -4,7 +4,7 @@ Sometimes, you want a giant object serialization and persistence
 framework with ACID properties, the ability to stream data, and
 versioning. For those people, Clipping is not your tool. Clipping is 
 a simple, flexible framework for declaring containers
-who's values should make a best effort to be persisent between runs of
+who's values should make a best effort to be persistent between runs of
 your software.
 
 Clipping does not enforce any explicit semantics on the strategy for
@@ -46,7 +46,7 @@ To write a new value to a clipping, use the write or << method :
     decisionStore << true
     if( decisionStore() ) { println("yes") } else { println("no") }
 
-This code will always print true, becuase the value cached in the
+This code will always print true, because the value cached in the
 decisionStore will immediately update. Assuming there are no other
 threads with references to decisionStore, this code will always print
 "yes".
@@ -74,7 +74,7 @@ following complete implementations exist:
    using standard java serialization. When writes occur, they occur
    within the calling thread. This strategy is reentrant and has a
    slightly lower overhead than its peer, but if many threads are
-   writing to the variable it will cause unncessary lock contention.
+   writing to the variable it will cause unnecessary lock contention.
 2. *ConcurrentDiskVar*: Like its cousin, it writes values to disk using
    java serialization. Unlike SynchronizedDiskVar, it uses a
    ReadWriteLock and tasks a separate thread with writes. This is
@@ -85,7 +85,7 @@ write-then-move technique for writes.
 
 ### Future Work
 
-1. We'd like more storage strategies. Redis seems like a likely candiate.
+1. We'd like more storage strategies. Redis seems like a likely candidate.
 2. We'd like more serialization methods. 
 3. We'd also like a pony.
 
