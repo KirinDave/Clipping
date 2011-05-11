@@ -1,4 +1,4 @@
-## Clipping: Trivial, Transparent Data Storage
+## Clipping: Simple, Transparent Data Storage
 
 Sometimes, you want a giant object serialization and persistence
 framework with ACID properties, the ability to stream data, and
@@ -16,13 +16,13 @@ to switch between various storage mediums, and to provide any sort of
 BankSimple uses Clipping to manage monotonically increasing date-based
 cursors on streaming data which may contain repetition.
 
-### Using a Clipping
+### Using A Clipping
 
 While the expected behavior of a clipping for the currently released
 behaviors is best explained via the unit tests, their behavior is not
-particularly difficult. To use a clipping you:
+particularly difficult. 
 
-Declare a Clipping instance (in this case the reentrant
+Firstly, declare a clipping instance (in this case the reentrant
 ConcurrentDiskVar):
 
     val decisionStore = new ConcurrentDiskVar[Boolean](false, "ex1", "/store")
@@ -40,26 +40,26 @@ returned. If that operation fails, the default value will be used.
 
 Once the clipping instance has consulted its backing store, it will
 not consult it on reads during its lifetime. To write a new value to 
-a clipping, use the write or << method :
+a clipping, use the `write` or `<<` method :
 
     decisionStore << true
     if( decisionStore() ) { println("yes") } else { println("no") }
 
 This code will always print true, because the value cached in the
-decisionStore will immediately update. Assuming there are no other
-threads with references to decisionStore, this code will always print
+`decisionStore` will immediately update. Assuming there are no other
+threads with references to `decisionStore`, this code will always print
 "yes".
 
 Finally, sometimes it is useful to predicate a value update to a piece
-of logic. Clippings support a writeIf method that allows one to
+of logic. Clippings support a `writeIf` method that allows one to
 predicate a write in such a fashion:
 
     val dateStore = new SynchronizedDiskVar[DateTime](DateTime.now, "ex2")
     val timeToWrite = DateTime.now
     dateStore.writeIf((d) => d.isBefore(timeToWrite)) { timeToWrite }
 
-In this case, the second argument to writeIf is only evaluated and
-stored only if timeToWrite is strictly after the currently stored
+In this case, the second argument to `writeIf` is only evaluated and
+stored only if `timeToWrite` is strictly after the currently stored
 value. 
 
 ### Current Implementations
