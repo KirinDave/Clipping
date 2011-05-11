@@ -64,7 +64,7 @@ value.
 
 ### Current Implementations
 
-Clipping's implementation separates the actual encoding & storage (a 
+Clipping's implementation separates the actual encoding and storage (a 
 PersistingStrategy) of values from the strategy used to order and 
 execute the writes and reads (a ManagementStrategy). Currently the
 following complete implementations exist:
