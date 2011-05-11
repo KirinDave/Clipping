@@ -46,7 +46,7 @@ a clipping, use the `write` or `<<` method :
     if( decisionStore() ) { println("yes") } else { println("no") }
 
 This code will always print "yes", because the value cached in the
-`decisionStore` will immediately update (Assuming there are no other
+`decisionStore` will immediately update (assuming there are no other
 threads with references to `decisionStore` altering its value)
 
 Finally, sometimes it is useful to predicate a value update to a piece
