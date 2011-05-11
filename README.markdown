@@ -45,10 +45,9 @@ a clipping, use the `write` or `<<` method :
     decisionStore << true
     if( decisionStore() ) { println("yes") } else { println("no") }
 
-This code will always print true, because the value cached in the
-`decisionStore` will immediately update. Assuming there are no other
-threads with references to `decisionStore`, this code will always print
-"yes".
+This code will always print "yes", because the value cached in the
+`decisionStore` will immediately update (Assuming there are no other
+threads with references to `decisionStore` altering its value)
 
 Finally, sometimes it is useful to predicate a value update to a piece
 of logic. Clippings support a `writeIf` method that allows one to
