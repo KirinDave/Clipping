@@ -2,10 +2,10 @@
 
 Sometimes, you want a giant object serialization and persistence
 framework with ACID properties, the ability to stream data, and
-versioning. For those people, Clipping is not your tool. Clipping is 
-a simple, flexible framework for declaring containers
-who's values should make a best effort to be persistent between runs of
-your software.
+versioning. For those people, Clipping is not the right tool. Clipping
+is a simple, flexible framework for declaring containers whose values
+should make a best effort to be persistent between runs of your
+software.
 
 Clipping does not enforce any explicit semantics on the strategy for
 storage, and currently its only implementations use the standard java
@@ -39,9 +39,8 @@ boolean value. If that operation succeeds, its value will be
 returned. If that operation fails, the default value will be used.
 
 Once the clipping instance has consulted its backing store, it will
-not consult it on reads during its lifetime.
-
-To write a new value to a clipping, use the write or << method :
+not consult it on reads during its lifetime. To write a new value to 
+a clipping, use the write or << method :
 
     decisionStore << true
     if( decisionStore() ) { println("yes") } else { println("no") }
