@@ -30,7 +30,6 @@ trait TestingPersistenceStrategy extends PersistingStrategy[String] {
 
   override def persist(str: String) {
     if (!isFree) {
-      println("isFree is not true, so isFailed is set!\n\n")
       isFailed = true
     }
 
