@@ -2,3 +2,5 @@ lib_managed/
 project/
 *~
 target/
+.idea/
+*.iml
