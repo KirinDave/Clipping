@@ -22,12 +22,14 @@ import org.specs.Specification
 
 trait NonPersistingStrategy extends PersistingStrategy[Long] {
   @volatile private var fakeStore: Long = _
-  @volatile private var unInit = true
-  override def persist(i: Long) { unInit = false ; fakeStore = i }
-  override def reify() = 
+  @volatile private var initialized = false
+
+  override def persist(i: Long) { initialized = true ; fakeStore = i }
+
+  override def reify() =
     fakeStore match {
-      case x if(unInit) => { unInit = false ; None }
-      case y            => Some(fakeStore)
+      case uninitialized if(!initialized) => { initialized = true ; None }
+      case wasInitialized => Some(fakeStore)
     }
 }
 
@@ -39,21 +41,22 @@ class RawTestVar extends PersistentVar[Long]
 
 class MonadicSpec extends Specification {
   "Persistent Vars" should {
-    "allow use of foreach" in { 
-      val tT = new RawTestVar
-      val tval = System.currentTimeMillis()
-      tT << tval
-      
-      for( t <- tT ) { t must be_==(tval) }
+    "allow use of for comphrehension" in {
+      val aRawTestVar = new RawTestVar
+      val capturedTime = System.currentTimeMillis()
+      aRawTestVar << capturedTime
+
+      for( i <- aRawTestVar ) { i must be_==(capturedTime) }
     }
 
     "allow use of map" in {
-      val tT = new RawTestVar
-      val tval = System.currentTimeMillis()
-      tT << tval
+      val aRawTestVar = new RawTestVar
+      val capturedTime = System.currentTimeMillis()
 
-      val r = for( t <- tT ) yield { t.toString }
-      r must be_==(tval.toString)
+      aRawTestVar << capturedTime
+
+      val result = aRawTestVar.map(_.toString)
+      result must be_==(capturedTime.toString)
     }
   }
 }
