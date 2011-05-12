@@ -26,38 +26,43 @@ object ToDisk extends Specification {
   "A disk-persisting var" should {
     "honor the default value at init." in {
       val folderName = "/tmp"
-      val fname = "L1"
+      val fileName = "L1"
+
       try {
         val default = "default"
-        val v = new STV(default, fname, folderName)
+        val v = new STV(default, fileName, folderName)
+
         v() must be_==( default )
-      } finally { 
-        deleteIfThere(folderName, fname)
+      } finally {
+        deleteIfThere(folderName, fileName)
       }
     }
 
     "honor writes." in {
       val folderName = "/tmp"
       val fname = "L2"
+
       try {
-        val t0 = System.currentTimeMillis().toString()
+        val capturedTime = System.currentTimeMillis().toString()
         val default = "default"
         val var1 = new STV(default, fname, folderName)
-        var1 << t0
-        var1() must be_==( t0 )
+
+        var1 << capturedTime
+        var1() must be_==( capturedTime )
+
         val var2 = new STV(default, fname, folderName) // This creates a new cell to read.
                                                        // Don't do this normally, it's unsafe.
         var2() must be_==(var1())
       } finally {
         deleteIfThere(folderName, fname)
       }
-    } 
+    }
   }
-  
+
   def deleteIfThere(loc: String, fname: String) {
-    val f = new File(loc, fname)
-    if(f.exists()) f.delete
+    val file = new File(loc, fname)
+
+    if(file.exists()) file.delete
   }
-    
 }
-    
+
